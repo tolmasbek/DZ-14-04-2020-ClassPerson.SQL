@@ -29,7 +29,7 @@ namespace DZ13_04SQL
             {
                 case 1:
                 {
-                    commandCode = "Select *from Person";
+                    commandCode = "SELECT * FROM Person";
                     SqlCommand command = new SqlCommand(commandCode, connect);
                     
                     SqlDataReader reader = command.ExecuteReader();
@@ -51,12 +51,12 @@ namespace DZ13_04SQL
                     {
                         System.Console.WriteLine("Not");
                     }
-                    connect.Close();
+                    
                     break;
                 }
                 case 2:
                 {
-                    commandCode = "Select * from Person";
+                    commandCode = "SELECT * FROM Person";
                     SqlCommand command = new SqlCommand(commandCode, connect);
                     
                     SqlDataReader reader = command.ExecuteReader();
@@ -66,18 +66,43 @@ namespace DZ13_04SQL
                     }
                     reader.Close();
 
-                    connect.Close();
                     break;
                 }
                 case 3:
                 {
-                    commandCode = "SELECT *from Where Id";
+                    commandCode = "SELECT * FROM Person WHERE Id = 3;";
+                    SqlCommand command = new SqlCommand(commandCode, connect);
+                    
+                    SqlDataReader reader = command.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        System.Console.WriteLine($"id: {reader.GetValue(0)},\nlastname: {reader.GetValue(1)},\nfirstname: {reader.GetValue(2)},\nmiddlename: {reader.GetValue(3)},\ndatebirth: {reader.GetValue(4)}");
+                    }
+                    reader.Close();
+                    break;
+                }
+                case 4:
+                {
+                    commandCode = "UPDATE Person SET [LastName] = 'TTTTTT', [FirstName] = 'S', [MiddleName] = 'FDSF', [BirthDate] = '12-03-2032' WHERE Id = 1;";
+                    SqlCommand command = new SqlCommand(commandCode, connect);
+                    
+                    SqlDataReader reader = command.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        System.Console.WriteLine($"id: {reader.GetValue(0)},\nlastname: {reader.GetValue(1)},\nfirstname: {reader.GetValue(2)},\nmiddlename: {reader.GetValue(3)},\ndatebirth: {reader.GetValue(4)}");
+                    }
+                    reader.Close();
+                    var result = command.ExecuteNonQuery();
+                    if(result > 0)
+                    {
+                        System.Console.WriteLine("Yes, UPDATED!!!");
+                    }
                     break;
                 }
             }
 
 
-                        
+            connect.Close();    
             Console.ReadKey();
         }
     }
