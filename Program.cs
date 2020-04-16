@@ -20,6 +20,7 @@ namespace DZ13_04SQL
             {
                 System.Console.WriteLine("not connected ...");
             }
+            
             System.Console.Write("Выберите какую то функцию:\n1 Добавление в таблицу\n2 Выбрать все\n3 Выбрать один по Id\n4 Обновить столбец кроме Id\n5 Удалить по Id");
             System.Console.WriteLine();
             string commandCode = "";
@@ -27,8 +28,19 @@ namespace DZ13_04SQL
             n = int.Parse(Console.ReadLine());
             switch(n)
             {
+                // Insert (Добавление)
                 case 1:
                 {
+                    string lname, fname, mname, bdate;
+                    System.Console.Write($"LastName: ");
+                        lname = Console.ReadLine();
+                    System.Console.Write($"FirstName: ");
+                        fname = Console.ReadLine();
+                    System.Console.Write($"MiddleName: ");
+                        mname = Console.ReadLine();
+                    System.Console.Write($"BirthDate: ");
+                        bdate = Console.ReadLine();
+
                     commandCode = "SELECT * FROM Person";
                     SqlCommand command = new SqlCommand(commandCode, connect);
                     
@@ -39,7 +51,7 @@ namespace DZ13_04SQL
                     }
                     reader.Close();
 
-                    string insertDataToTable = string.Format($"INSERT INTO Person ([LastName],[FirstName],[MiddleName],[BirthDate]) VALUES('{"Farmonov"}', '{"Suhrob"}', '{"Turgolibovich"}', '{"09-05-2004"}') ");
+                    string insertDataToTable = string.Format($"INSERT INTO Person ([LastName],[FirstName],[MiddleName],[BirthDate]) VALUES('{lname}', '{fname}', '{mname}', '{bdate}') ");
                     command = new SqlCommand(insertDataToTable, connect);
                 
                     var result = command.ExecuteNonQuery();
@@ -51,9 +63,9 @@ namespace DZ13_04SQL
                     {
                         System.Console.WriteLine("Not");
                     }
-                    
                     break;
                 }
+                // Select All (Выбрать всё)
                 case 2:
                 {
                     commandCode = "SELECT * FROM Person";
@@ -68,9 +80,13 @@ namespace DZ13_04SQL
 
                     break;
                 }
+                // Select by Id (Выбрать один по Id)
                 case 3:
                 {
-                    commandCode = "SELECT * FROM Person WHERE Id = 3;";
+                    int num;
+                    System.Console.Write("Введите Id строки которую хотите вывести: ");
+                    num = int.Parse(Console.ReadLine());
+                    commandCode = $"SELECT * FROM Person WHERE Id = '{num}';";
                     SqlCommand command = new SqlCommand(commandCode, connect);
                     
                     SqlDataReader reader = command.ExecuteReader();
@@ -81,9 +97,23 @@ namespace DZ13_04SQL
                     reader.Close();
                     break;
                 }
+                // Update (Обновить каждый столбец кроме Id)
                 case 4:
                 {
-                    commandCode = "UPDATE Person SET [LastName] = 'TTTTTT', [FirstName] = 'S', [MiddleName] = 'FDSF', [BirthDate] = '12-03-2032' WHERE Id = 1;";
+                    int num;
+                    System.Console.Write("Введите Id строки которую хотите Изменить: ");
+                    num = int.Parse(Console.ReadLine());
+                    string lname, fname, mname, bdate;
+                    System.Console.Write($"LastName: ");
+                        lname = Console.ReadLine();
+                    System.Console.Write($"FirstName: ");
+                        fname = Console.ReadLine();
+                    System.Console.Write($"MiddleName: ");
+                        mname = Console.ReadLine();
+                    System.Console.Write($"BirthDate: ");
+                        bdate = Console.ReadLine();
+
+                    commandCode = $"UPDATE Person SET [LastName] = '{lname}', [FirstName] = '{fname}', [MiddleName] = '{mname}', [BirthDate] = '{bdate}' WHERE Id = '{num}';";
                     SqlCommand command = new SqlCommand(commandCode, connect);
                     
                     SqlDataReader reader = command.ExecuteReader();
@@ -99,9 +129,25 @@ namespace DZ13_04SQL
                     }
                     break;
                 }
+                // Delete (Удалить один по Id)
+                case 5:
+                {
+                    int num;
+                    System.Console.Write("Введите Id строки которую хотите Удалить: ");
+                    num = int.Parse(Console.ReadLine());
+
+                    commandCode = $"DELETE Person WHERE Id = '{num}';";
+                    SqlCommand command = new SqlCommand(commandCode, connect);
+                    
+                    SqlDataReader reader = command.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        System.Console.WriteLine($"id: {reader.GetValue(0)},\nlastname: {reader.GetValue(1)},\nfirstname: {reader.GetValue(2)},\nmiddlename: {reader.GetValue(3)},\ndatebirth: {reader.GetValue(4)}");
+                    }
+                    reader.Close();                    
+                    break;
+                }
             }
-
-
             connect.Close();    
             Console.ReadKey();
         }
